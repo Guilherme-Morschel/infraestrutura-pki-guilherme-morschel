@@ -1,0 +1,33 @@
+[ ca ]
+default_ca = CA_default
+
+[ CA_default ]
+dir               = C:/pki/rootCA
+certificate       = $dir/raiz.crt
+private_key       = $dir/private/raiz.key
+new_certs_dir     = $dir/newcerts
+database          = $dir/index.txt
+serial            = $dir/serial
+crlnumber         = $dir/crlnumber
+default_md        = sha256
+policy            = policy_strict
+default_crl_days  = 180
+
+[ policy_strict ]
+commonName = supplied
+
+[ req ]
+default_bits       = 4096
+prompt             = no
+default_md         = sha256
+x509_extensions    = v3_ca
+distinguished_name = req_distinguished_name
+
+[ req_distinguished_name ]
+commonName = AC Raiz - Guilherme Morschel
+
+[ v3_ca ]
+basicConstraints = critical, CA:true
+keyUsage = critical, keyCertSign, cRLSign
+authorityInfoAccess = caIssuers;URI:http://pki.local/raiz.crt
+crlDistributionPoints = URI:http://pki.local/crl/raiz.crl

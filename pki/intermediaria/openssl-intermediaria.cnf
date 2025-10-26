@@ -1,0 +1,56 @@
+[ ca ]
+default_ca = CA_default
+
+[ CA_default ]
+dir               = /c/Trabalho/pki/intermediaria
+database          = $dir/index.txt
+new_certs_dir     = $dir/certs
+certificate       = $dir/certs/intermediaria.crt
+serial            = $dir/serial
+private_key       = $dir/private/intermediaria.key
+crlnumber         = $dir/crlnumber
+default_md        = sha256
+policy            = policy_strict
+default_days      = 365
+default_crl_days  = 180
+
+
+[ policy_strict ]
+commonName = supplied
+
+[ req ]
+default_bits       = 4096
+prompt             = no
+default_md         = sha256
+distinguished_name = req_distinguished_name
+x509_extensions    = v3_intermediate_ca
+
+[ req_distinguished_name ]
+commonName = AC Intermediaria Guilherme Morschel
+
+[ v3_intermediate_ca ]
+basicConstraints = critical, CA:true, pathlen:0
+keyUsage = critical, keyCertSign, cRLSign
+authorityInfoAccess = caIssuers;URI:http://pki.local/intermediaria.crt
+crlDistributionPoints = URI:http://pki.local/crl/intermediaria.crl
+
+[ v3_server ]
+basicConstraints = CA:FALSE
+keyUsage = critical, digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+authorityInfoAccess = caIssuers;URI:http://pki.local/intermediaria.crt
+crlDistributionPoints = URI:http://pki.local/crl/intermediaria.crl
+
+[ server_cert ]
+basicConstraints = CA:FALSE
+nsCertType = server
+nsComment = "Certificado TLS do Servidor"
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid,issuer
+keyUsage = critical, digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.1 = web.local

@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  pki:
+    image: nginx:latest
+    container_name: pki.local
+    volumes:
+      - ./http:/usr/share/nginx/html
+    ports:
+      - "8080:80"
+    networks:
+      pki_net:
+        aliases:
+          - pki.local
+
+  web:
+    build: ./webserver
+    container_name: web.local
+    depends_on:
+      - pki
+    ports:
+      - "8443:443"
+    networks:
+      pki_net:
+        aliases:
+          - web.local
+
+  client:
+    build: ./client
+    container_name: client
+    depends_on:
+      - web
+    networks:
+      pki_net:
+        aliases:
+          - client
+    stdin_open: true
+    tty: true
+
+networks:
+  pki_net:
+    driver: bridge
