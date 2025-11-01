@@ -1,24 +1,33 @@
 [ req ]
-default_bits       = 2048
-prompt             = no
-default_md         = sha256
-req_extensions     = v3_req
-distinguished_name = req_distinguished_name
+default_bits        = 2048
+default_md          = sha256
+prompt              = no
+encrypt_key         = no
+distinguished_name  = dn_web
+req_extensions      = v3_req
 
-[ req_distinguished_name ]
-commonName = web.local
+[ dn_web ]
+C  = BR
+ST = Rio Grande do Sul
+L  = Rolante
+O  = Trabalho de Segurança da Informação
+CN = web.local
 
 [ v3_req ]
+# Extensões incluídas no CSR
 basicConstraints = CA:FALSE
-keyUsage = critical, digitalSignature, keyEncipherment
+keyUsage = digitalSignature, keyEncipherment
 extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 
 [ alt_names ]
 DNS.1 = web.local
 
-[ v3_server ]
-basicConstraints = CA:FALSE
+# Extensões adicionadas no certificado final (pela intermediária)
+[v3_server]
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid,issuer
+basicConstraints = critical, CA:FALSE
 keyUsage = critical, digitalSignature, keyEncipherment
 extendedKeyUsage = serverAuth
 subjectAltName = @alt_names

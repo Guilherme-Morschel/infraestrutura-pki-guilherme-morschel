@@ -1,42 +1,43 @@
-version: "3.9"
+version: "3.8"
 
 services:
   pki:
-    image: nginx:latest
+    image: nginx:stable-alpine
     container_name: pki.local
+    restart: always
     volumes:
-      - ./http:/usr/share/nginx/html
-    ports:
-      - "8080:80"
+      - ./http:/usr/share/nginx/html:ro
     networks:
-      pki_net:
+      pki-net:
         aliases:
           - pki.local
+    ports:
+      - "8080:80"
 
   web:
     build: ./webserver
     container_name: web.local
+    restart: always
     depends_on:
       - pki
-    ports:
-      - "8443:443"
     networks:
-      pki_net:
+      pki-net:
         aliases:
           - web.local
+    ports:
+      - "8443:443"
 
   client:
     build: ./client
     container_name: client
     depends_on:
       - web
+      - pki
     networks:
-      pki_net:
-        aliases:
-          - client
+      pki-net:
     stdin_open: true
     tty: true
 
 networks:
-  pki_net:
+  pki-net:
     driver: bridge

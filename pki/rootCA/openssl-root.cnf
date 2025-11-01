@@ -2,32 +2,63 @@
 default_ca = CA_default
 
 [ CA_default ]
-dir               = C:/pki/rootCA
-certificate       = $dir/raiz.crt
-private_key       = $dir/private/raiz.key
-new_certs_dir     = $dir/newcerts
+dir               = .                   # diretório atual (rootCA)
+certs             = $dir/certs
+crl_dir           = $dir/crl
 database          = $dir/index.txt
+new_certs_dir     = $dir/newcerts
+certificate       = $dir/raiz.crt
 serial            = $dir/serial
 crlnumber         = $dir/crlnumber
+crl               = $dir/crl/raiz.crl
+private_key       = $dir/private/raiz.key
+RANDFILE          = $dir/private/.rand
+
+# Padrões
+default_days      = 3650
+default_crl_days  = 30
 default_md        = sha256
+preserve          = no
 policy            = policy_strict
-default_crl_days  = 180
+email_in_dn       = no
+name_opt          = ca_default
+cert_opt          = ca_default
+copy_extensions   = copy
 
 [ policy_strict ]
-commonName = supplied
+countryName             = optional
+stateOrProvinceName     = optional
+organizationName        = optional
+organizationalUnitName  = optional
+commonName              = supplied
+emailAddress            = optional
 
 [ req ]
-default_bits       = 4096
-prompt             = no
-default_md         = sha256
-x509_extensions    = v3_ca
-distinguished_name = req_distinguished_name
+default_bits        = 4096
+default_md          = sha256
+prompt              = no
+distinguished_name  = dn_root
+x509_extensions     = v3_ca
 
-[ req_distinguished_name ]
-commonName = AC Raiz - Guilherme Morschel
+[ dn_root ]
+CN = AC Raiz - Guilherme Morschel
+O  = Trabalho de Segurança da Informação
+C  = BR
 
 [ v3_ca ]
-basicConstraints = critical, CA:true
+# Extensões da autoridade raiz
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer:always
+basicConstraints = critical, CA:true, pathlen:1
 keyUsage = critical, keyCertSign, cRLSign
+# URLs públicas (AIA e CRL) — simuladas no servidor http://pki.local/
 authorityInfoAccess = caIssuers;URI:http://pki.local/raiz.crt
 crlDistributionPoints = URI:http://pki.local/crl/raiz.crl
+
+[ v3_intermediate_ca ]
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer
+basicConstraints = critical, CA:true, pathlen:0
+keyUsage = critical, keyCertSign, cRLSign
+authorityInfoAccess = caIssuers;URI:http://pki.local/intermediaria.crt
+crlDistributionPoints = URI:http://pki.local/crl/intermediaria.crl

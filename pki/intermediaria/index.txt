@@ -1,2 +1,1 @@
-R	260423012133Z	251025132216Z	1000	unknown	/CN=web.local
-V	261025181120Z		1001	unknown	/CN=web.local
+V	280202002823Z		1000	unknown	/C=BR/ST=Rio Grande do Sul/O=Trabalho de Seguran\xC3\x83\xC2\xA7a da Informa\xC3\x83\xC2\xA7\xC3\x83\xC2\xA3o/CN=web.local
